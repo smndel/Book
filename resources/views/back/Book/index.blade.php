@@ -55,10 +55,6 @@
         </td>
         @endif
 
-
-
-
-      
       <td><a href="{{route('book.show', $book->id)}}">voir</a></td>
       <td><a href="{{route('book.edit', $book->id)}}">Editer</a></td>
       <td>

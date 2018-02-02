@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Book extends Model
 {
@@ -47,9 +48,21 @@ class Book extends Model
        return str_shuffle($value);
    }
 
-   //Pour afficher seulemnt le livre avec le status "published"
-   public function scopePublished($query){
-    return $query->where('status', 'published');
+   //Pour afficher seulemnt le livre avec le status "published" avec un local scope
+   // public function scopePublished($query){
+   //  return $query->where('status', 'published');
+   // }
+
+   //Pour afficher seulemnt le livre avec le status "published" avec un Global scope (qui permet, par rapport à la local scope, de ne pas appeler la function published() à chaque fois dans le controller)
+   protected static function boot()
+   {
+        parent::boot();
+
+        static::addGlobalScope('published', function (Builder $builder)
+        {
+            $builder->where('status', 'published');
+        });
+
    }
 
 }
