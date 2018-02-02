@@ -11,7 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        
+
+        //Pour la table d'authentification
+        $this->call(UserTableSeeder::class);
+    
 
         $this->call(AuthorTableSeeder::class);
         // $this->call(UsersTableSeeder::class);

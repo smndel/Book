@@ -18,7 +18,7 @@ class CreateScoresTable extends Migration
             $table->ipAddress('ip');
             $table->unsignedTinyInteger('vote');
             $table->unsignedInteger('book_id');
-            $table->foreign('book_id')->references('id')->on('books');//Contrainte référencé sur la table genre.id
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');//Contrainte référencé sur la table genre.id
             $table->timestamps();
         });
     }

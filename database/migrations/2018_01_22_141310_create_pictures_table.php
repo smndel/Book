@@ -18,7 +18,7 @@ class CreatePicturesTable extends Migration
             $table->string('title', 100)->nullable(); //VARCHAR 100
             $table->string('link', 100); //VARCHAR 100
             $table->unsignedInteger('book_id');
-            $table->foreign('book_id')->references('id')->on('books');
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
             $table->timestamps();
         });
     }

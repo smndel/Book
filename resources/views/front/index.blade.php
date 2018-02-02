@@ -8,10 +8,14 @@
     <li class="list-group-item">
         <h2><a href="{{url('book', $book->id)}}">{{$book->title}}</a></h2>
         <div class="row">
+            
             <div class="img-thumbnail col-md-4" style="margin-left: 10px">
+            
                 <a href="{{url('book', $book->id)}}">
                 <div class="text-center">
-                <img class="" src="{{url('images', $book->picture->link)}}"">
+                @if(count($book->picture)>0)
+                <img class="" src="{{url('images', $book->picture->link)}}">
+                @endif
                 </a>
                 </div>
             </div>
@@ -36,4 +40,5 @@
 @empty
 @endforelse
 </ul>
+
 @endsection

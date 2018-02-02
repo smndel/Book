@@ -7,6 +7,7 @@ use App\Book; //importe l'alias de la classe
 use App\Author; //importe pour la page author
 use App\Genre;
 use App\Score;
+use Cache;
 
 class FrontController extends Controller
 {
@@ -21,8 +22,14 @@ class FrontController extends Controller
 
     public function index(){
     	// return Book::all(); //retourne tous les livres de l'application
-    	$books = Book::paginate(5);
-    	return view('front.index', ['books' => $books]);
+    	$prefix=request()->page?? 'home';
+        $path='book'.$prefix;
+
+        $books = Cache::remember($path, 60*24, function(){
+            return Book::published()->with('picture', 'authors', 'scores')->paginate(5);
+        });
+
+        return view('front.index', ['books'=>$books]);
     }
 
     public function show(int $id){
@@ -33,7 +40,7 @@ class FrontController extends Controller
     }
 
     public function showBookByAuthor(int $id){
-    	$books = Author::find($id)->books()->paginate(5);//on récupère tout les livres d'un auteur
+    	$books = Author::find($id)->books()->published()->paginate(5);//on récupère tout les livres d'un auteur
     	$author = Author::find($id);
 
     	//Que nous passons à la vue
@@ -43,7 +50,7 @@ class FrontController extends Controller
 
      public function showBookByGenre(int $id){
      	$genre = Genre::find($id);
-    	$books = $genre->books()->paginate(5);//on récupère tout les livres d'un auteur
+    	$books = $genre->books()->published()->paginate(5);//on récupère tout les livres d'un auteur
     	//Que nous passons à la vue
     	return view('front.genre', ['books' => $books, 'genre' => $genre]);
     }

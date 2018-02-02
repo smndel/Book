@@ -23,7 +23,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //Vérifier que tout les id transmis sur les routes
+        Route::pattern('id', '[1-9][0-9]*');
 
         parent::boot();
     }

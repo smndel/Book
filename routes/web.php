@@ -12,21 +12,25 @@
 */
 
 //Page d'accueil
-Route::get('/', 'FrontController@index');
+Route::get('/', 'FrontController@index')->name('home');
 
 //Route pour afficher un livre, route sécurisée
-Route::get('book/{id}', 'FrontController@show')->where(['id'=>'[0-9]+']);
+Route::get('book/{id}', 'FrontController@show');
+
+// Route::get('book/{id}', 'FrontController@show')->where(['id'=>'[0-9]+']); Pas la peine de vérifier, on le fait déjà sur RouteService Provider
 
 //Route pour la page author
-Route::get('author/{id}', 'FrontController@showBookByAuthor')->where(['id'=>'[0-9]+']);
-
+Route::get('author/{id}', 'FrontController@showBookByAuthor');
 //Route pour la page Menu
-Route::get('genre', 'FrontController@__construct')->where(['id'=>'[0-9]+']);
-
+Route::get('genre', 'FrontController@__construct');
 //Route pour la page genre
-Route::get('genre/{id}', 'FrontController@showBookByGenre')->where(['id'=>'[0-9]+']);
+Route::get('genre/{id}', 'FrontController@showBookByGenre');
 
 Route::post('vote', 'FrontController@create')->name('vote');
+//Routes sécurisées
+Route::resource('admin/book', 'BookController')->middleware('auth');
+
+
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -47,3 +51,7 @@ Route::post('vote', 'FrontController@create')->name('vote');
 // 	return App\Book::find($id);
 
 
+//Routes sécurisées
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');//middleware auth vérification d"un user authentifié

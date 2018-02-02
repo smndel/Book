@@ -6,7 +6,9 @@
         <div class="col-md-12 img-thumbnail" style="margin-left: 5px">
 
             <div class="text-center">
+            @if(count($book->picture)>0)
             <img src="{{url('images', $book->picture->link)}}">
+            @endif
             </div>
 
         </div>
