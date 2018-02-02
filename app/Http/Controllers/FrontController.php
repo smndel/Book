@@ -26,7 +26,7 @@ class FrontController extends Controller
         $path='book'.$prefix;
 
         $books = Cache::remember($path, 60*24, function(){
-            return Book::published()->with('picture', 'authors', 'scores')->paginate(5);
+            return Book::published()->with('picture', 'authors', 'genre')->paginate(5);
         });
 
         return view('front.index', ['books'=>$books]);
