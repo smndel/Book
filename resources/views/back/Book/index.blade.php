@@ -45,6 +45,7 @@
       @endif
       <td>{{$book->created_at}}</td>
       
+      
         @if($book->status== 'published')
         <td style="color:green">
         {{$book->status}}

@@ -7,6 +7,7 @@ use App\Book;
 use App\Author; //importe pour la page author
 use App\Genre;
 use Storage;
+use App\Http\Requests\BookRequest;
 
 class BookController extends Controller
 {
@@ -41,23 +42,27 @@ class BookController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
 
+        //POur la validation du formulaire, nous avons deux solutions:
+        //Soit créer Form Request validation avec :"php artisan make:request BookRequest", et mettre dans la fonction rules les condition d'acceptation du formulaire. Puis à chaque function implication une validation d'un request, mettre en donnée le nom de notre form request (ici BookRequest).
+        //Soit faire directement dans la fonciton qui traite la request, un $this->validate($request...) avec les conditions d'acception des champs du formulaire.
+
         //Vérification des données envoyées
-         $this->validate($request,
-        [
-            'title' => 'required',
-            'description' => 'required|string',
-            'genre_id' => 'integer',
-            'authors' => 'array',
-            'authors.*' => 'int',
-            'status' => 'in:published,unpublished',
-            'picture' => 'image|mimes:jpg,png,jpeg',
-        ]);
+        //  $this->validate($request,
+        // [
+        //     'title' => 'required',
+        //     'description' => 'required|string',
+        //     'genre_id' => 'integer',
+        //     'authors' => 'array',
+        //     'authors.*' => 'int',
+        //     'status' => 'in:published,unpublished',
+        //     'picture' => 'image|mimes:jpg,png,jpeg',
+        // ]);
 
         //hydratation des données du livre enregistré en base de données
-        $book = Book::create($request->all());
+        $book = Book::withoutGlobalScopes()->create($request->all());
         $book->authors()->attach($request->authors);
 
         $img = $request->file('picture');
@@ -86,7 +91,7 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $book = Book::find($id);
+        $book = Book::withoutGlobalScopes()->find($id);
         return view('back.book.show' ,['book' => $book]);
     }
 
@@ -100,7 +105,7 @@ class BookController extends Controller
     {
         
         //hydratation des données du livre enregistré en base de données
-        $book = Book::find($id);
+        $book = Book::withoutGlobalScopes()->find($id);
         $authors = Author::pluck('name', 'id')->all();
         $genres = Genre::pluck('name', 'id')->all();
 
@@ -115,21 +120,21 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BookRequest $request, $id)
     {
-        $this->validate($request,
-        [
-            'title' => 'required',
-            'description' => 'required|string',
-            'genre_id' => 'integer',
-            'authors' => 'array',
-            'authors.*' => 'int',
-            'status' => 'in:published,unpublished',
-            'picture' => 'image|mimes:jpg,png,jpeg',
-        ]);
+        // $this->validate($request,
+        // [
+        //     'title' => 'required',
+        //     'description' => 'required|string',
+        //     'genre_id' => 'integer',
+        //     'authors' => 'array',
+        //     'authors.*' => 'int',
+        //     'status' => 'in:published,unpublished',
+        //     'picture' => 'image|mimes:jpg,png,jpeg',
+        // ]);
 
 
-        $book = Book::find($id); //Récupérer l'id du livre à modifier
+        $book = Book::withoutGlobalScopes()->find($id); //Récupérer l'id du livre à modifier
         $book->update($request->all()); //Mettre à jour les données du livre
         $book->authors()->sync($request->authors); //Synchronise les données dans la table de liaison
     
@@ -158,7 +163,7 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $book = Book::findOrFail($id);
+        $book = Book::withoutGlobalScopes()->findOrFail($id);
         $book->delete();
 
         return redirect()->route('book.index')->with('message', 'success');

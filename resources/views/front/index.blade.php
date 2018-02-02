@@ -22,11 +22,18 @@
             <p class="col-md-7" >{{$book->description}}</p>
         </div>
 
+        
         <p> La note moyenne est de : {{round($book->avgVotes(),2)}}</p>
+      
+
 
         <h3>Genre :</h3>
             <ul>
+                @if(isset($book->genre->name))
                 <li><a href="{{url('genre', $book->genre->id)}}">{{$book->genre->name}}</a></li>
+                @else
+                <li>No Genre</li>
+                @endif
             </ul>
 
         <h3>Auteurs :</h3>

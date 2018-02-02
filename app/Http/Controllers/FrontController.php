@@ -26,7 +26,7 @@ class FrontController extends Controller
         $key = 'book'.$prefix;
 
         $books = Cache::remember($key, 60*24, function(){
-            return Book::with('picture', 'authors', 'genre', ' scores')->paginate(5);
+            return Book::with('picture', 'authors', 'genre')->paginate(5);
         });
 
         return view('front.index', ['books'=>$books]);
